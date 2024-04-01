@@ -11,34 +11,48 @@
 library(tidyverse)
 
 #### Clean data ####
-raw_data <- read_csv("inputs/data/plane_data.csv")
+raw_data <- read_csv("data/raw_data/raw_data.csv")
+gdp_raw_data <- read_csv("data/raw_data/gdp_raw_data.csv")
+edu_raw_data <- read_csv("data/raw_data/edu_raw_data.csv")
+wagegap_raw_data <- read_csv("data/raw_data/wagegap_raw_data.csv")
 
-cleaned_data <-
+attitude_data <-
   raw_data |>
-  janitor::clean_names() |>
-  select(wing_width_mm, wing_length_mm, flying_time_sec_first_timer) |>
-  filter(wing_width_mm != "caw") |>
-  mutate(
-    flying_time_sec_first_timer = if_else(flying_time_sec_first_timer == "1,35",
-                                   "1.35",
-                                   flying_time_sec_first_timer)
-  ) |>
-  mutate(wing_width_mm = if_else(wing_width_mm == "490",
-                                 "49",
-                                 wing_width_mm)) |>
-  mutate(wing_width_mm = if_else(wing_width_mm == "6",
-                                 "60",
-                                 wing_width_mm)) |>
-  mutate(
-    wing_width_mm = as.numeric(wing_width_mm),
-    wing_length_mm = as.numeric(wing_length_mm),
-    flying_time_sec_first_timer = as.numeric(flying_time_sec_first_timer)
-  ) |>
-  rename(flying_time = flying_time_sec_first_timer,
-         width = wing_width_mm,
-         length = wing_length_mm
-         ) |> 
-  tidyr::drop_na()
+  select(Region, LOCATION, Country, Variables, Value) |>
+  filter(Region == "All regions") |> 
+  filter(Variables == "Attitudes on women's income") |>
+  mutate(Value = as.numeric(Value)) |>
+  select(-Region, -Variables) |>
+  rename(attitude = Value) 
 
+gdp_data <-
+  gdp_raw_data |>
+  select(LOCATION, Country, Year, Value) |>
+  filter(Year == "2022") |>
+  mutate(Value = as.numeric(Value)) |>
+  rename(gdp = Value) |>
+  select(-Year)
+
+edu_data <- 
+  edu_raw_data |>
+  select(LOCATION, TIME, Value) |>
+  filter(TIME == "2022") |>
+  mutate(Value = as.numeric(Value)) |>
+  rename(education = Value) |>
+  select(-TIME)
+  
+wagegap_data <- 
+  wagegap_raw_data |> 
+  select(LOCATION, SUBJECT, TIME, Value) |>
+  filter(TIME == "2020") |>
+  filter(SUBJECT == "EMPLOYEE") |>
+  mutate(Value = as.numeric(Value)) |>
+  rename(wagegap = Value) |>
+  select(-TIME, -SUBJECT)
+
+merged_data <- left_join(attitude_data, gdp_data)  
+merged_data <- left_join(merged_data, edu_data)
+merged_data <- left_join(merged_data, wagegap_data)
+merged_data <- na.omit(merged_data)
 #### Save data ####
 write_csv(cleaned_data, "outputs/data/analysis_data.csv")
