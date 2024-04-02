@@ -1,13 +1,12 @@
 ---
-title: "My title"
+title: "The Impact of Attitudes on the Gender Wage Gap"
 subtitle: "My subtitle if needed"
 author: 
-  - First author
-  - Another author
-thanks: "Code and data are available at: LINK."
+  - Alaina Hu
+thanks: "Code and data are available at:https://github.com/alainahu/gender_wage_gap"
 date: today
 date-format: long
-abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
+abstract: "This study examines the impact of societal attitudes towards women's income, GDP, and education level on the gender wage gap. Through statistical analysis of data from various countries, we find that negative attitudes towards women's income significantly exacerbate the gender wage gap, notwithstanding the mitigating effects of higher education levels and GDP. Our findings highlight the critical role of societal attitudes in economic disparities between genders, suggesting targeted interventions for policymakers. This research underscores the complexity of the gender wage gap and the importance of addressing societal attitudes to achieve gender equality in the labor market."
 format: pdf
 number-sections: true
 bibliography: references.bib
@@ -25,9 +24,11 @@ library(palmerpenguins)
 
 # Introduction
 
-You can and should cross-reference sections and sub-sections. We use @citeR and @rohan.
+The gender wage gap, the average difference in pay between men and women, persists as a prominent issue in labor economics, reflecting broader societal inequalities. Despite significant strides towards gender equality, disparities in earnings remain a stubborn challenge worldwide. The causes of the gender wage gap are multifaceted, involving complex interactions between economic, social, and educational factors. Traditional economic explanations such as differences in occupation, industry, work experience, and education have been extensively studied. However, these factors do not fully account for the persistent wage discrepancies, suggesting the influence of more intangible elements, such as societal attitudes towards women’s roles in the workforce and the economy.
 
-The remainder of this paper is structured as follows. @sec-data....
+Recent research has begun to explore the impact of these societal attitudes, proposing that they may significantly influence economic outcomes for women. This paper seeks to contribute to this emerging body of research by examining how attitudes towards women's income, alongside GDP and education level, predict variations in the gender wage gap across different contexts. Social psychology research has revealed the importance of attitudes on behavior. By integrating data on societal attitudes with economic and educational indicators, this study aims to uncover the nuanced ways in which these variables interact to affect the economic valuation of women's labor. The estimand is the impact of societal attitudes toward women's income, GDP, and education on the gender wage gap. 
+
+Our research paper begins with the Data section (@sec-data) to visualize and further understand the measurement, source, methodology, and variables we are examining. Then, we introduce the Model (@sec-model) used to understand the relationships in the data and report the findings in the Results section (@sec-results). Finally, we include the Discussion (@sec-discussion) of the findings, summarizing the takeaway and future of this research.
 
 
 
