@@ -3,7 +3,7 @@ title: "The Impact of Attitudes on the Gender Wage Gap"
 subtitle: "My subtitle if needed"
 author: 
   - Alaina Hu
-thanks: "Code and data are available at:https://github.com/alainahu/gender_wage_gap"
+thanks: "Code and data are available at: https://github.com/alainahu/gender_wage_gap"
 date: today
 date-format: long
 abstract: "This study examines the impact of societal attitudes towards women's income, GDP, and education level on the gender wage gap. Through statistical analysis of data from various countries, we find that negative attitudes towards women's income significantly exacerbate the gender wage gap, notwithstanding the mitigating effects of higher education levels and GDP. Our findings highlight the critical role of societal attitudes in economic disparities between genders, suggesting targeted interventions for policymakers. This research underscores the complexity of the gender wage gap and the importance of addressing societal attitudes to achieve gender equality in the labor market."
