@@ -1,100 +1,100 @@
-Country,attitude
-Australia,6.5
-Canada,10.8
-Czechia,49.8
-Finland,35.4
-Germany,15.6
-Greece,27.2
-Hungary,55.3
-Japan,14.4
-Korea,32.5
-Mexico,53.5
-Netherlands,5.1
-New Zealand,7.2
-Norway,29
-Poland,17.4
-Slovak Republic,53.8
-Spain,14.4
-Sweden,11.8
-Türkiye,43.3
-United States,10
-Albania,24.2
-Algeria,40.5
-Argentina,19.6
-Armenia,45.7
-Azerbaijan,37.6
-Bangladesh,59.5
-Bolivia,52.3
-Bosnia and Herzegovina,45.7
-Brazil,36.3
-Bulgaria,41.5
-Chile,36.7
-China (People's Republic of),27.3
-Colombia,43
-Croatia,31.7
-Cyprus,35.7
-Dominican Republic,55.8
-Ecuador,41.2
-Egypt,57.3
-El Salvador,60.6
-Estonia,25.3
-Ethiopia,46.2
-Georgia,26.2
-Ghana,54.1
-Guatemala,38.2
-Haiti,61.2
-"Hong Kong, China",27.1
-India,38.4
-Indonesia,37.6
-Iran,50.3
-Iraq,48.7
-Jordan,56.3
-Kazakhstan,31.6
-Kenya,53.3
-Kuwait,30.8
-Kyrgyzstan,61.8
-Latvia,46.1
-Lebanon,34.4
-Libya,40.1
-Lithuania,58.4
-North Macedonia,24.3
-Malaysia,29.1
-Moldova,34.9
-Mongolia,37.4
-Morocco,47.2
-Myanmar,56.2
-Nicaragua,43.9
-Nigeria,67.5
-Palestinian Authority or West Bank and Gaza Strip,42.3
-Pakistan,73
-Peru,26.3
-Philippines,27.4
-Qatar,35
-Romania,23
-Rwanda,30.8
-Singapore,21.5
-Slovenia,17.4
-South Africa,34.7
-Chinese Taipei,19.7
-Tajikistan,46.9
-Thailand,30.9
-Trinidad and Tobago,48
-Tunisia,44.3
-Ukraine,32.5
-Uruguay,26.5
-Uzbekistan,61.1
-Venezuela,41.4
-Viet Nam,47.1
-Yemen,54
-Zimbabwe,67.8
-Serbia,24.2
-Montenegro,37
-World,35.5
-OECD,22.7
-G20,30.5
-G7,11.9
-European Union,21.3
-Africa,53.1
-Americas,28.2
-Asia,36
-Europe,23.2
+Country,Income Attitude,Violence Attitude,Political Attitude,GDP,Gender Gap
+Australia,6.5,6.8,12.6,65099.8459118981,0.77
+Canada,10.8,13.6,15.2,55522.445687688,0.77
+Czechia,49.8,2.6,49.7,27226.6156386023,NA
+Finland,35.4,13.2,11.8,50871.9304508821,0.86
+Germany,15.6,2.5,8.2,48717.9911402128,0.81
+Greece,27.2,5,27.1,20867.2690861087,0.69
+Hungary,55.3,11.5,32.9,18390.1849993244,0.68
+Japan,14.4,7.8,29.3,34017.2718075024,0.64
+Korea,32.5,41.1,52,NA,NA
+Mexico,53.5,31.8,24,11496.5228716049,0.76
+Netherlands,5.1,7.1,6.6,57025.01245598,0.77
+New Zealand,7.2,2.9,6.5,48418.5916631992,0.85
+Norway,29,11.1,8,108729.18690323,0.87
+Poland,17.4,9.7,30.3,18688.0044867103,0.72
+Slovak Republic,53.8,5.5,49,21256.8084273666,NA
+Spain,14.4,9.6,9,29674.5442864413,0.79
+Sweden,11.8,13.1,5.3,56424.2846986686,0.81
+Türkiye,43.3,6,53.5,NA,0.63
+United States,10,13.9,16.5,76329.5822652029,0.74
+Albania,24.2,5,24.1,6810.11404104233,0.79
+Algeria,40.5,25,74.6,4342.63796796522,0.57
+Argentina,19.6,14.1,22.7,13650.6046294524,0.76
+Armenia,45.7,3.7,52.1,7018.05150434798,0.72
+Azerbaijan,37.6,24,62.7,7762.0738285884,NA
+Bangladesh,59.5,17,64.1,2688.30550090738,0.72
+Bolivia,52.3,22.1,22.6,3600.12163486427,0.73
+Bosnia and Herzegovina,45.7,1,32.1,7568.79847995923,0.69
+Brazil,36.3,11.7,18.6,8917.67491057495,0.72
+Bulgaria,41.5,18.3,45.4,13974.4492487792,0.71
+Chile,36.7,31.3,33.3,15355.4797401048,0.77
+China (People's Republic of),27.3,14.6,50.4,NA,NA
+Colombia,43,12.3,24.1,6624.16539269075,0.75
+Croatia,31.7,4.4,18,18570.4039968345,0.73
+Cyprus,35.7,7.8,28.7,32048.240234375,0.67
+Dominican Republic,55.8,3,41,10111.2457110261,0.7
+Ecuador,41.2,20.2,22.8,6391.28248430643,0.73
+Egypt,57.3,34.7,83,NA,0.62
+El Salvador,60.6,10,37,5127.32166823012,0.71
+Estonia,25.3,17.8,37.2,28247.095992497,0.78
+Ethiopia,46.2,13.7,40.7,1027.58591095964,0.71
+Georgia,26.2,8.7,57.4,6674.95695994589,0.7
+Ghana,54.1,37,81.3,2203.55893518303,0.68
+Guatemala,38.2,23.5,20.8,5473.20856444589,NA
+Haiti,61.2,23,37.3,1748.25713229469,NA
+"Hong Kong, China",27.1,35.5,28.1,NA,NA
+India,38.4,41,58.7,2410.88802070689,0.64
+Indonesia,37.6,20.2,72.2,4787.99930771921,0.69
+Iran,50.3,9.8,55.3,NA,0.57
+Iraq,48.7,31,71.5,5937.19546600271,NA
+Jordan,56.3,63,71.9,4311.00004622061,0.64
+Kazakhstan,31.6,37.4,51.6,11492.031938762,0.72
+Kenya,53.3,50.4,42.2,2099.30193826696,0.7
+Kuwait,30.8,38.2,79,41079.5226998138,0.65
+Kyrgyzstan,61.8,19.3,72.3,NA,NA
+Latvia,46.1,1.9,40.4,21779.5042572825,0.79
+Lebanon,34.4,46.6,46.4,..,0.62
+Libya,40.1,11.3,73.5,6716.09598462328,NA
+Lithuania,58.4,1.4,44.6,25064.808914729,0.8
+North Macedonia,24.3,11,46.1,6591.47131411961,0.71
+Malaysia,29.1,55.3,58.3,11993.1876132994,0.68
+Moldova,34.9,13,52.3,5714.43048840294,0.78
+Mongolia,37.4,62.9,49.3,5045.50470031666,0.7
+Morocco,47.2,52.3,42.8,3441.99145507813,0.62
+Myanmar,56.2,14.4,69.9,1149.21121846296,0.65
+Nicaragua,43.9,12,25.2,2255.42599496242,0.81
+Nigeria,67.5,29.3,75.7,2162.63373428577,0.63
+Palestinian Authority or West Bank and Gaza Strip,42.3,15.7,80.8,NA,NA
+Pakistan,73,51,77.6,1588.8798287911,0.57
+Peru,26.3,11.4,16.6,7125.82993135746,0.76
+Philippines,27.4,53.6,56.5,3498.5098055874,0.79
+Qatar,35,5,85.6,87661.4501457275,0.62
+Romania,23,8.5,40.3,15786.8017421977,0.69
+Rwanda,30.8,45,45.7,966.232071361993,0.79
+Singapore,21.5,13.8,31,82807.6290622897,0.73
+Slovenia,17.4,17.1,19.5,28439.3340989687,0.77
+South Africa,34.7,7,53.4,6766.48125429478,0.78
+Chinese Taipei,19.7,19.8,22.1,NA,NA
+Tajikistan,46.9,75.1,74.5,1054.18948358818,0.67
+Thailand,30.9,8,46.1,6909.9562847948,0.71
+Trinidad and Tobago,48,8,25.1,19629.4653400829,NA
+Tunisia,44.3,29.4,58.5,3747.41939149283,0.64
+Ukraine,32.5,31.1,44.9,4533.9755859375,0.71
+Uruguay,26.5,3,11.1,20795.0423535553,0.71
+Uzbekistan,61.1,39.7,77.2,2255.15115496772,NA
+Venezuela,41.4,27.9,25.8,NA,NA
+Viet Nam,47.1,56.9,55.2,4163.51429874522,NA
+Yemen,54,36.7,86.2,NA,NA
+Zimbabwe,67.8,17.9,45,1676.82148896726,0.74
+Serbia,24.2,2,35.8,9537.68286673128,0.76
+Montenegro,37,2,29.6,10093.4387007266,0.71
+World,35.5,30.3,47.9,12687.7418941733,NA
+OECD,22.7,13.9,22,NA,NA
+G20,30.5,25.3,45.4,NA,NA
+G7,11.9,10.7,17,NA,NA
+European Union,21.3,6.3,18.2,37433.2784499183,NA
+Africa,53.1,38.2,62.4,NA,NA
+Americas,28.2,16.6,19.9,NA,NA
+Asia,36,31.8,56,NA,NA
+Europe,23.2,8.9,19.6,NA,NA

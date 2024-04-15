@@ -71,11 +71,12 @@ gdp_data <-
 merged_data <- left_join(attitude_data, gdp_data, by = "Country")  
 merged_data <- left_join(merged_data, gendergap_data, by = "Country")
 merged_data <- merged_data |>
-  select(-LOCATION, -Code)
+  select(-LOCATION, -Code) |>
+  drop_na()
 
 
 
 
 
 #### Save data ####
-write_csv(cleaned_data, "data/analysis_data.csv")
+write_csv(merged_data, "data/analysis_data.csv")
