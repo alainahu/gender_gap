@@ -45,7 +45,6 @@ attitude_data <- attitude_data |>
 
 
 attitude_data <- attitude_data |>
-  drop_na(wide_data) |>
   rename(
     `Income Attitude` = attitude_1,
     `Violence Attitude` = attitude_2,
@@ -71,11 +70,20 @@ gdp_data <-
 merged_data <- left_join(attitude_data, gdp_data, by = "Country")  
 merged_data <- left_join(merged_data, gendergap_data, by = "Country")
 merged_data <- merged_data |>
-  select(-LOCATION, -Code) |>
+  select(-LOCATION) |>
   drop_na()
 
-
-
+merged_data <- arrange(merged_data, Country)
+merged_data <- merged_data |>
+  mutate(`Income Attitude` = as.numeric(`Income Attitude`),
+         `Violence Attitude`= as.numeric(`Violence Attitude`),
+         `Political Attitude` = as.numeric(`Political Attitude`),
+         GDP = as.numeric(GDP),
+         `Gender Gap` = as.numeric(`Gender Gap`)
+         )
+merged_data <- merged_data |>
+  mutate(GDP = round(GDP, 2)) |>
+  mutate(`Gender Gap` = 1 - `Gender Gap`)
 
 
 #### Save data ####

@@ -18,7 +18,10 @@ bibliography: references.bib
 #| message: false
 
 library(tidyverse)
-library(palmerpenguins)
+library(here)
+library(kableExtra)
+library(ggplot2)
+library(ggrepel)
 ```
 
 
@@ -34,67 +37,196 @@ Our research paper begins with the Data section (@sec-data) to visualize and fur
 
 # Data {#sec-data}
 
-Some of our data is of penguins (@fig-bills), from @palmerpenguins.
+Data analysis is performed in `R` [@citeR], and additional help is provided by libraries such as `dplyr` [@dplyr], `ggplot2` [@ggplot], `ggrepel` [@ggrepel], `tidyverse` [@thereferencecanbewhatever], `kableExtra` [@kableextra], `knitr` [@knitr], and `sf` [@pebesma2023spatial], `readxl` [@excel], `here` [@here], `rstanarm` [@rstan], `arrow` [@arrow], `tidybayes` [@tidybayes], `modelsummary` [@modelsummary], `broom` [@broom], and `parameters` [@parameters].
+
+Data for this research comes from the OECD Database, World Bank DataBank, and Global Gender Gap Report. We combine datasets from each of these sources to form our analysis data. Data regarding attitudes toward women are provided by the OECD Gender, Institutions and Development Database 2023. Data on the gender gap is found on the Global Gender Gap Report. Lastly, data on GDP per capita is from the World Bank Databank. 
+
+## Measurement
+In order to measure attitudes toward women, we include three indicators that are relevant to the measurement of the gender gap index specified in the Global Gender Gap Report. The Global Gender Gap Report displays progress towards gender parity and compares countries' gender gaps across four dimensions: economic opportunities, education, health and political leadership. Keeping these dimensions in mind, we include the variables of attitudes on women's income, attitudes on women's ability to be a political leader, and attitudes justifying intimate-partner violence. We include attitudes on women's income because income is related to the economic opportunities women receive. Similarly, we include attitudes on women's ability to be a political leader because it directly related to the dimension of political leadership. We include attitudes justifying intimate-partner violence because past research as linked intimate partner violence with women's health. Lutgendorf found that intimate partner violence results in significant stress, negative health effects and negative economic effects.  is directly Next, we include GDP per capita as another explanatory variable, as GDP per capita has often been an indicator of economic development and efficiency. Many researchers have studied the relationship between economic efficiency and the gender gap index. While Podolchak found that fluctuations in GDP per capita growth (annual) did not affect the level of the gender gap index, we include the variable to see if we observe different findings in our research. We use attitudes on women's income, attitudes on women's ability to be a political leader, and attitudes justifying intimate-partner violence as measures of attitudes toward women as well as GDP per capita as a measure of economic development. 
+
+
+## Gender Gap 
+The Gender Gap Index dataset comes from the 2023 Global Gender Gap Report published by the World Economic Forum. We download the data through Statista (cite statista). The raw dataset includes 146 countries and their gender gap index values. The value of the gender gap index shows the level of progress toward gender parity (the equal representation and treatment of genders). Values range from 0 to 1, and a parity score of 1 indicates full parity. The gender gap is the distance from full parity, meaning that countries with higher scores close to 1 have smaller gender gaps and countries with lower scores have wider gender gaps. For simplicity in analysis, we subtract the raw index score from 1 to indicate the gender gap. 
+
+
+## Attitudes Towards Women
+Data on attitudes on women is collected through the OECD Gender, Institutions, and Development Database 2023. The raw dataset contains information on discriminatory attitudes, discrimination in the family, violence against women, access to productive and financial assets for women, and restricted civil liberties of women. Focusing on attitudes towards women for the purpose of this study, we extract the variables of attitudes on women's income, attitudes on women's ability to be a political leader, and attitudes justifying intimate-partner violence. Attitudes on women's income is defined as the percentage of the population aged 18 years and above agreeing or strongly agreeing that "if a woman earns more money than her husband, it's almost certain to cause problems." Attitudes on women's ability to be a political leader is the percentage of the population aged 18 years and above agreeing or strongly agreeing that "men make better political leaders than women do." Attitudes justifying intimate-partner violence is the percentage of women aged 15 to 49 years who consider a husband to be justified in hitting or beating his wife. 
+
+## GDP per capita
+GDP data comes from the World Bank. The dataset includes GDP per capita values measured in current US dollars. Data is available for all countries and also includes GDP per capita of regions like East Asia & Pacific, Euro area, Latin America & Caribbean, Middle East & North Africa, North America, and the world. Since we are interested in country-level data, we keep the data for individual countries and take out values for the larger regions. 
+
+## Analysis Data
+As the goal of this research is to analyze the impact of attitudes on the gender gap, we combine all the described data above to form an analysis dataset for the purpose of analyzing the impact of attitudes towards women on the gender gap. Below is a sample of the cleaned analysis data and summary statistics for all explanatory variables and the outcome variable of gender gap. 
 
 ```{r}
-#| label: fig-bills
-#| fig-cap: Bills of penguins
+#| label: tbl-cleaned_data
+#| tbl-cap: Sample of cleaned attitude, GDP, and gender gap data
 #| echo: false
 
-ggplot(penguins, aes(x = island, fill = species)) +
-  geom_bar(alpha = 0.8) +
-  scale_fill_manual(values = c("darkorange","purple","cyan4"),
-                    guide = "none") +
-  theme_minimal() +
-  facet_wrap(~species, ncol = 1) +
-  coord_flip()
+data_path <- here("data", "analysis_data", "analysis_data.csv")
+data <- read_csv(data_path, show_col_types = FALSE)
+
+data |>
+  select(-Code) |>
+  slice(1:5) |>
+  kable(align = c('c', 'c', 'c', 'c')) |>
+  kable_styling(latex_options = c("hold_position"))
+  
+```
+```{r}
+#| tbl-cap: "Summary Statistics"
+#| label: tbl-summ-stats
+#| echo: false
+
+summary <- data |>
+  summarise(
+    Mean_Income = mean(`Income Attitude`, na.rm = TRUE),
+    Median_Income = median(`Income Attitude`, na.rm = TRUE),
+    SD_Income = sd(`Income Attitude`, na.rm = TRUE),
+    Min_Income = min(`Income Attitude`, na.rm = TRUE),
+    Max_Income = max(`Income Attitude`, na.rm = TRUE),
+    Mean_Violence = mean(`Violence Attitude`, na.rm = TRUE),
+    Median_Violence = median(`Violence Attitude`, na.rm = TRUE),
+    SD_Violence = sd(`Violence Attitude`, na.rm = TRUE),
+    Min_Violence = min(`Violence Attitude`, na.rm = TRUE),
+    Max_Violence = max(`Violence Attitude`, na.rm = TRUE),
+    Mean_Political = mean(`Political Attitude`, na.rm = TRUE),
+    Median_Political = median(`Political Attitude`, na.rm = TRUE),
+    SD_Political = sd(`Political Attitude`, na.rm = TRUE),
+    Min_Political = min(`Political Attitude`, na.rm = TRUE),
+    Max_Political = max(`Political Attitude`, na.rm = TRUE),
+    Mean_GDP = mean(GDP, na.rm = TRUE),
+    Median_GDP = median(GDP, na.rm = TRUE),
+    SD_GDP = sd(GDP, na.rm = TRUE),
+    Min_GDP = min(GDP, na.rm = TRUE),
+    Max_GDP = max(GDP, na.rm = TRUE),
+    Mean_Gap = mean(`Gender Gap`, na.rm = TRUE),
+    Median_Gap = median(`Gender Gap`, na.rm = TRUE),
+    SD_Gap = sd(`Gender Gap`, na.rm = TRUE),
+    Min_Gap = min(`Gender Gap`, na.rm = TRUE),
+    Max_Gap = max(`Gender Gap`, na.rm = TRUE)
+  )
+
+long_summary_stats <-  summary |>
+  pivot_longer(cols = everything(), names_to = "Statistic", values_to = "Value") |>
+  separate(Statistic, into = c("Measure", "Variable"), sep = "_") |>
+  spread(key = Measure, value = Value) |>
+  select(Variable, Mean, Median, SD, Min, Max)
+
+long_summary_stats$Variable <- c("Gender Gap", "GDP", "Income Attitude", "Political Attitude", "Violence Attitude")
+
+kable(long_summary_stats,
+      format = "markdown",
+      digits = 2,
+      col.names = c("Variable", "Mean", "Median", "Standard Deviation", "Min", "Max"),
+      row.names = FALSE,
+      align = c('l', 'c', 'c', 'c', 'c', 'c'), 
+      )
 ```
 
-Talk more about it.
+## Examining Attitudes towards Women on the Gender Gap
 
-And also planes (@fig-planes). (You can change the height and width, but don't worry about doing that until you have finished every other aspect of the paper - Quarto will try to make it look nice and the defaults usually work well once you have enough text.)
+As our variable of interests, we are determined to examine the relationship between attitudes towards women and the gender gap across different countries. We first examine the relationship between attitudes on women's income and the gender gap. As defined earlier, the income attitude variable is the percentage of the population aged 18 years and above agreeing or strongly agreeing that "if a woman earns more money than her husband, it's almost certain to cause problems," and the gender gap variable is the difference between full parity and its level of progress. Thus, we expect there to be a positive relationship between the income attitude variable and the gender gap variable.  
 
 ```{r}
-#| label: fig-planes
-#| fig-cap: Relationship between wing length and width
 #| echo: false
-#| warning: false
-#| message: false
+#| label: income_plot
+#| fig-cap: "Positive relationship in negative attitude towards high income in women and the gender gap by country"
+#| warning: false 
 
-analysis_data <- read_csv(here::here("data/analysis_data/analysis_data.csv"))
-
-analysis_data |> 
-  ggplot(aes(x = width, y = length)) +
-  geom_point(alpha = 0.8) +
+  ggplot(data = data, aes(x = `Income Attitude`, y = `Gender Gap`, label = `Code`)) +
+  geom_point() +
+  geom_text_repel(hjust=-0.5, vjust=0.5) +
+  geom_smooth(method = "lm", color = "red", se = TRUE) +
   theme_minimal() +
-  labs(x = "Wing width (mm)",
-       y = "Wing length (mm)")
+  labs(x = "Attitudes on Women's Income", y = "Gender Gap") +
+  scale_colour_viridis_d()
+
 ```
+As expected, we observe a positive relationship between the attitudes on women's income variable and the gender gap variable. This means that there is a positive relationship between holding negative attitudes towards women with high income and the gender gap. Countries with high percentages of people agreeing that "if a woman earns more money than her husband, it's almost certain to cause problems" are associated with higher gender gaps. 
 
-Talk way more about it. 
+Next, we examine the relationship between attitudes on women's ability to be a political leader and the gender gap. The value of the variable is the percentage of the population aged 18 years and above agreeing or strongly agreeing that "men make better political leaders than women do." We expect there to be a positive relationship between negative attitudes on women in political leadership and the gender gap. 
 
+```{r}
+#| echo: false
+#| label: political_plot
+#| fig-cap: "Positive relationship in negative attitude towards women in political leadership and the gender gap by country"
+#| warning: false 
 
+  ggplot(data = data, aes(x = `Political Attitude`, y = `Gender Gap`, label = `Code`)) +
+  geom_point() +
+  geom_text_repel(hjust=-0.5, vjust=0.5) +
+  geom_smooth(method = "lm", color = "red", se = TRUE) +
+  theme_minimal() +
+  labs(x = "Attitudes on Women's Ability to be a Political Leader", y = "Gender Gap") +
+  scale_colour_viridis_d()
+
+```
+Through the plot, we see that there is a positive relationship between attitudes on women's ability to be a political leader and the gender gap across the countries. This means that higher percentages of people believing that women are less capable than men of being political leaders are associated with wider gender gaps. 
+
+Finally, we look at the relationship between attitudes justifying intimate-partner violence and the gender gap. To reiterate, the variable of attitudes justifying intimate-partner violence is defined as the percentage of women aged 15 to 49 years who consider a husband to be justified in hitting or beating his wife. Therefore, we expect a positive relationship between attitudes justifying intimate-partner violence and the gender gap. 
+
+```{r}
+#| echo: false
+#| label: violence_plot
+#| fig-cap: "Positive relationship in attitudes justifying intimate partner violence towards women and the gender gap by country"
+#| warning: false 
+
+  ggplot(data = data, aes(x = `Violence Attitude`, y = `Gender Gap`, label = `Code`)) +
+  geom_point() +
+  geom_text_repel(hjust=-0.5, vjust=0.5) +
+  geom_smooth(method = "lm", color = "red", se = TRUE) +
+  theme_minimal() +
+  labs(x = "Attitudes Justifying Intimate-Partner Violence", y = "Gender Gap") +
+  scale_colour_viridis_d()
+
+```
+The relationship observed in the data indicates that countries where a higher percentage of women accept intimate-partner violence as justified tend to exhibit wider disparities between genders. This suggests that societal attitudes that condone violence against women are associated with greater gender inequality.
+
+## Examining GDP per capita towards the Gender Gap
+Here, we examine the relationship between GDP per capita and the gender gap. Despite previous research that did not show any link between GDP and gender gaps, we propose a negative relationship between GDP per capita and the gender gap. Since higher GDP means a greater amount or greater value of goods and services has been created, higher GDP might equate to greater human progress (cite investopedia). Intuitively, we expect that greater human progress would be associated with smaller gender gaps.
+
+```{r}
+#| echo: false
+#| label: gdp_plot
+#| fig-cap: "Positive relationship in attitudes justifying intimate partner violence towards women and the gender gap by country"
+#| warning: false 
+
+  ggplot(data = data, aes(x = GDP, y = `Gender Gap`, label = `Code`)) +
+  geom_point() +
+  geom_text_repel(hjust=-0.5, vjust=0.5) +
+  geom_smooth(method = "lm", color = "red", se = TRUE) +
+  theme_minimal() +
+  labs(x = "GDP per capita", y = "Gender Gap") +
+  scale_colour_viridis_d()
+
+```
+Through the plot, we observe a negative relationship between GDP per capita and the gender gap across the countries in our data. This means that higher GDP per capita is associated with narrower gender gaps. 
 
 # Model {#sec-model}
 
-The goal of our modelling strategy is twofold. Firstly,...
-
-Here we briefly describe the Bayesian analysis model used to investigate... Background details and diagnostics are included in [Appendix -@sec-model-details].
+Here we briefly describe the Bayesian analysis models used to investigate. 
 
 ## Model set-up
+From the data visualization in the Data section, we observe a moderately positive relationship between the attitude on women's income and the gender gap, moderately positive relationship between attitude on women's ability to be a political leader and the gender gap, moderately positive relationship between attitudes justifying intimate-partner violence and the gender gap. We observe a negative relationship between GDP per capita and the gender gap. Here, we build a multiple linear regression model between all explanatory variables and the outcome variable of gender gap. Through the multiple regression model, we are able to assess the gender gap related with each individual discriminatory attitude towards women while controlling for the other attitudes and GDP per capita. We are also able to assess the relationship between GDP per capita and the gender gap while controlling for the different attitude variables. 
 
-Define $y_i$ as the number of seconds that the plane remained aloft. Then $\beta_i$ is the wing width and $\gamma_i$ is the wing length, both measured in millimeters.  
+### Multiple Linear Regression
+Define $y_i$ as the gender gap in the country $i$. Then $income_i$ is the attitudes on women's income, $politics_i$ is the attitudes on women's ability to be a political leader, $violence_i$ is the attitudes justifying intimate-partner violence, and $gdp_i$ is the GDP per capita of country $i$. 
 
-\begin{align} 
+
+\begin{align}
 y_i|\mu_i, \sigma &\sim \mbox{Normal}(\mu_i, \sigma) \\
-\mu_i &= \alpha + \beta_i + \gamma_i\\
-\alpha &\sim \mbox{Normal}(0, 2.5) \\
-\beta &\sim \mbox{Normal}(0, 2.5) \\
-\gamma &\sim \mbox{Normal}(0, 2.5) \\
-\sigma &\sim \mbox{Exponential}(1)
+\mu_i &= \beta_0 + \beta_1 \times \mbox{income}_i + \beta_2 \times \mbox{politics}_i + \beta_3 \times \mbox{violence}_i + \beta_4 \times \mbox{gdp}_i \\
+\beta_0 &\sim \mbox{Normal}(0, 0.16) \\
+\beta_1 &\sim \mbox{Normal}(0, 0.991) \\
+\beta_2 &\sim \mbox{Normal}(0, 0.736) \\
+\beta_3 &\sim \mbox{Normal}(0, 0.894) \\
+\beta_4 &\sim \mbox{Normal}(0, 662.271) \\
+\sigma &\sim \mbox{Exponential}(0.16)
 \end{align}
 
-We run the model in R [@citeR] using the `rstanarm` package of @rstanarm. We use the default priors from `rstanarm`.
+We run the model in R [@citeR] using the `rstanarm` package of @rstan. Initially, we use the default priors from `rstanarm`, however, we allow `rstanarm` to improve the priors by scaling them based on the data. We allow auto-scaling and run both models with the updated priors specified above. 
+
 
 
 ### Model justification
@@ -166,7 +298,7 @@ Weaknesses and next steps should also be included.
 
 ## Posterior predictive check
 
-In @fig-ppcheckandposteriorvsprior-1 we implement a posterior predictive check. This shows...
+In @fig-ppcheckandposteriorvsprior-1 we implement a posterior predictive check on the multiple regression model. This shows the comparison between the actual outcome variable (public art installations) with simulations from the posterior distribution.
 
 In @fig-ppcheckandposteriorvsprior-2 we compare the posterior with the prior. This shows... 
 
