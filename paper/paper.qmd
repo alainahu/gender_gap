@@ -3,7 +3,7 @@ title: "The Impact of Attitudes and Economic Development on Gender Inquality"
 subtitle: "Statistical analysis on the effect of discriminatory attitudes and GDP per capita on the gender gap"
 author: 
   - Alaina Hu
-thanks: "Code and data are available at: https://github.com/alainahu/gender_wage_gap"
+thanks: "Code and data are available at: https://github.com/alainahu/gender_gap"
 date: today
 date-format: long
 abstract: "This study examines the impact of societal attitudes such as attitudes related to women's income, political leadership involvement, and safety on gender inequality. The study also looks at the impact of economic development on gender inequality through the measure of GDP. Through statistical analysis of data from various countries, we find that negative attitudes towards women's involvement in political leadership increases gender inequality. We do not find a relationship between attitudes on women's income, attitudes justifying violence towards women, and economic development with gender inequality. Our research underscores the importance of addressing societal attitudes to achieve gender equality in politics but highlights complexity of the gender wage gap."
