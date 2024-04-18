@@ -10,7 +10,7 @@
 #### Workspace setup ####
 library(tidyverse)
 library(readxl)
-
+library(arrow)
 #### Clean data ####
 attitude_data <- read_csv("data/raw_data/raw_data.csv")
 
@@ -83,8 +83,11 @@ merged_data <- merged_data |>
          )
 merged_data <- merged_data |>
   mutate(GDP = round(GDP, 2)) |>
-  mutate(`Gender Gap` = 1 - `Gender Gap`)
+  mutate(`Gender Gap` = 1 - `Gender Gap`) |>
+  filter(Country != "Lebanon")
+
 
 
 #### Save data ####
-write_csv(merged_data, "data/analysis_data.csv")
+write_csv(merged_data, "data/analysis_data/analysis_data.csv")
+write_parquet(merged_data, "data/analysis_data/analysis_data.parquet")

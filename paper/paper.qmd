@@ -1,12 +1,12 @@
 ---
-title: "The Impact of Attitudes on the Gender Wage Gap"
-subtitle: "My subtitle if needed"
+title: "The Impact of Attitudes and Economic Development on Gender Inquality"
+subtitle: "Statistical analysis on the effect of discriminatory attitudes and GDP per capita on the gender gap"
 author: 
   - Alaina Hu
 thanks: "Code and data are available at: https://github.com/alainahu/gender_wage_gap"
 date: today
 date-format: long
-abstract: "This study examines the impact of societal attitudes towards women's income, GDP, and education level on the gender wage gap. Through statistical analysis of data from various countries, we find that negative attitudes towards women's income significantly exacerbate the gender wage gap, notwithstanding the mitigating effects of higher education levels and GDP. Our findings highlight the critical role of societal attitudes in economic disparities between genders, suggesting targeted interventions for policymakers. This research underscores the complexity of the gender wage gap and the importance of addressing societal attitudes to achieve gender equality in the labor market."
+abstract: "This study examines the impact of societal attitudes such as attitudes related to women's income, political leadership involvement, and safety on gender inequality. The study also looks at the impact of economic development on gender inequality through the measure of GDP. Through statistical analysis of data from various countries, we find that negative attitudes towards women's involvement in political leadership increases gender inequality. We do not find a relationship between attitudes on women's income, attitudes justifying violence towards women, and economic development with gender inequality. Our research underscores the importance of addressing societal attitudes to achieve gender equality in politics but highlights complexity of the gender wage gap."
 format: pdf
 number-sections: true
 bibliography: references.bib
@@ -17,19 +17,30 @@ bibliography: references.bib
 #| warning: false
 #| message: false
 
+
 library(tidyverse)
-library(here)
+library(knitr)
 library(kableExtra)
+library(dplyr)
 library(ggplot2)
 library(ggrepel)
+library(here)
+library(rstanarm)
+library(arrow)
+library(tidybayes)
+library(modelsummary)
+library(parameters)
 ```
 
 
 # Introduction
+Gender inequality remains a pervasive issue worldwide, manifesting in various social, economic, and political dimensions. Despite significant progress in some areas, disparities between men and women persist, deeply rooted in cultural norms and economic structures. This research paper aims to explore the intricate relationships between societal attitudes toward women and economic indicators, specifically Gross Domestic Product (GDP), in influencing gender inequality. By examining how perceptions about women's economic contributions, political leadership, and justification of intimate partner violence shape gender disparities, this study aims to look at the relationship between societal attitudes toward women and economic indicators with gender inequality. Previous research on gender inequality has often focused on factors that are observable like education attainment, fertility rates, etc. Our research adds on to the existing literature by going back a step and focusing on the factor that influences many of these societal trends like female education attainment or fertility rate: attitudes toward women. 
 
-The gender wage gap, the average difference in pay between men and women, persists as a prominent issue in labor economics, reflecting broader societal inequalities. Despite significant strides towards gender equality, disparities in earnings remain a stubborn challenge worldwide. The causes of the gender wage gap are multifaceted, involving complex interactions between economic, social, and educational factors. Traditional economic explanations such as differences in occupation, industry, work experience, and education have been extensively studied. However, these factors do not fully account for the persistent wage discrepancies, suggesting the influence of more intangible elements, such as societal attitudes towards women’s roles in the workforce and the economy.
+Attitudes are often the result of experience or upbringing and can have powerful influence over behavior and affect how people act. For example, attitudes can have a profound impact on socially relevant behaviors, such as voting and more strongly connected attitude networks have a stronger impact on behavior [@voting]. Attitudes on women's income could reflect underlying beliefs about the economic value of women relative to men, which can directly affect women's participation in the labor market and their earning potential. Similarly, perceptions of women's capabilities as political leaders could play a crucial role in determining their representation and effectiveness in governance structures. Moreover, societal justification of intimate partner violence could be an indicator stark indicator of the systemic undervaluation of women's health and safety, often perpetuated through cultural norms and legal systems. Together, these attitudes might shape the trajectory of societal progress towards or away from gender parity. 
 
-Recent research has begun to explore the impact of these societal attitudes, proposing that they may significantly influence economic outcomes for women. This paper seeks to contribute to this emerging body of research by examining how attitudes towards women's income, alongside GDP and education level, predict variations in the gender wage gap across different contexts. Social psychology research has revealed the importance of attitudes on behavior. By integrating data on societal attitudes with economic and educational indicators, this study aims to uncover the nuanced ways in which these variables interact to affect the economic valuation of women's labor. The estimand is the impact of societal attitudes toward women's income, GDP, and education on the gender wage gap. 
+Furthermore, the economic dimension, as measured by GDP, provides a broader context of a country's economic health and development level. Economic prosperity can influence gender inequality through various channels, including education, employment, and health services, which are crucial for empowering women. Conversely, economic downturns might exacerbate existing inequalities, making an in-depth analysis of these factors essential. In the literature, there has been research conducted on the impact of gender inequality on GDP. For some time, gender inequality has been considered the main characteristic of insufficient GDP growth [@juhasova]
+
+We are interested in exploring the relationship between societal attitudes such as attitudes on women;s income, attitudes on women's ability to be a political leader, attitudes justifying violence towards women, and GDP on gender inequality. The estimand is the impact of societal attitudes and economic development on gender inequality. We find a positive relationship between negative attitudes on women's involvement in political leadership and gender inequality. We find no relationship between attitudes on women's income and gender inequality, attitudes justifying violence towards women and gender inequality, and economic development through GDP on gender inequality. We conclude that negative attitudes toward women's ability to be involved in political leadership increases gender inequality because political empowerment currently has the widest gender gap among the dimensions used to calculate the gender gap between men and women. 
 
 Our research paper begins with the Data section (@sec-data) to visualize and further understand the measurement, source, methodology, and variables we are examining. Then, we introduce the Model (@sec-model) used to understand the relationships in the data and report the findings in the Results section (@sec-results). Finally, we include the Discussion (@sec-discussion) of the findings, summarizing the takeaway and future of this research.
 
@@ -37,16 +48,16 @@ Our research paper begins with the Data section (@sec-data) to visualize and fur
 
 # Data {#sec-data}
 
-Data analysis is performed in `R` [@citeR], and additional help is provided by libraries such as `dplyr` [@dplyr], `ggplot2` [@ggplot], `ggrepel` [@ggrepel], `tidyverse` [@thereferencecanbewhatever], `kableExtra` [@kableextra], `knitr` [@knitr], and `sf` [@pebesma2023spatial], `readxl` [@excel], `here` [@here], `rstanarm` [@rstan], `arrow` [@arrow], `tidybayes` [@tidybayes], `modelsummary` [@modelsummary], `broom` [@broom], and `parameters` [@parameters].
+Data analysis is performed in `R` [@citeR], and additional help is provided by libraries such as `dplyr` [@dplyr], `ggplot2` [@ggplot], `ggrepel` [@ggrepel], `tidyverse` [@thereferencecanbewhatever], `kableExtra` [@kableextra], `knitr` [@knitr], `readxl` [@excel], `here` [@here], `rstanarm` [@rstan], `arrow` [@arrow], `tidybayes` [@tidybayes], `modelsummary` [@modelsummary], `broom` [@broom], and `parameters` [@parameters].
 
-Data for this research comes from the OECD Database, World Bank DataBank, and Global Gender Gap Report. We combine datasets from each of these sources to form our analysis data. Data regarding attitudes toward women are provided by the OECD Gender, Institutions and Development Database 2023. Data on the gender gap is found on the Global Gender Gap Report. Lastly, data on GDP per capita is from the World Bank Databank. 
+Data for this research comes from the `OECD Gender, Institutions, and Development 2023 Database` [@oecd], `World Bank DataBank` [@worldbank], and `Global Gender Gap Report` [@gendergap]. We combine datasets from each of these sources to form our analysis data. Data regarding attitudes toward women are provided by the OECD Gender, Institutions and Development Database 2023. Data on gender inequality is found on the Global Gender Gap Report. Lastly, data on GDP is from the World Bank Databank. 
 
 ## Measurement
-In order to measure attitudes toward women, we include three indicators that are relevant to the measurement of the gender gap index specified in the Global Gender Gap Report. The Global Gender Gap Report displays progress towards gender parity and compares countries' gender gaps across four dimensions: economic opportunities, education, health and political leadership. Keeping these dimensions in mind, we include the variables of attitudes on women's income, attitudes on women's ability to be a political leader, and attitudes justifying intimate-partner violence. We include attitudes on women's income because income is related to the economic opportunities women receive. Similarly, we include attitudes on women's ability to be a political leader because it directly related to the dimension of political leadership. We include attitudes justifying intimate-partner violence because past research as linked intimate partner violence with women's health. Lutgendorf found that intimate partner violence results in significant stress, negative health effects and negative economic effects.  is directly Next, we include GDP per capita as another explanatory variable, as GDP per capita has often been an indicator of economic development and efficiency. Many researchers have studied the relationship between economic efficiency and the gender gap index. While Podolchak found that fluctuations in GDP per capita growth (annual) did not affect the level of the gender gap index, we include the variable to see if we observe different findings in our research. We use attitudes on women's income, attitudes on women's ability to be a political leader, and attitudes justifying intimate-partner violence as measures of attitudes toward women as well as GDP per capita as a measure of economic development. 
+In order to measure attitudes toward women, we include three indicators that are relevant to the measurement of the gender inequality. To measure gender inequality, we use the gender gap index specified in the Global Gender Gap Report. The Global Gender Gap Report displays progress towards gender parity and compares countries' gender gaps across four dimensions: economic opportunities, education, health and political leadership. Keeping these dimensions in mind, we include the variables of attitudes on women's income, attitudes on women's ability to be a political leader, and attitudes justifying intimate-partner violence. We include attitudes on women's income because income is related to the economic opportunities women receive. Similarly, we include attitudes on women's ability to be a political leader because it directly related to the dimension of political leadership. We include attitudes justifying intimate-partner violence because past research as linked intimate partner violence with women's health. @Lutgendorf found that intimate partner violence results in significant stress, negative health effects and negative economic effects. Next, we include GDP per capita as another explanatory variable, as GDP per capita has often been an indicator of economic development and efficiency. Many researchers have studied the relationship between economic efficiency and the gender gap index. While @Podolchak found that fluctuations in GDP per capita growth (annual) did not affect the level of the gender gap index, we include the variable to see if we observe different findings in our research. We use attitudes on women's income, attitudes on women's ability to be a political leader, and attitudes justifying intimate-partner violence as measures of attitudes toward women as well as GDP per capita as a measure of economic development. 
 
 
 ## Gender Gap 
-The Gender Gap Index dataset comes from the 2023 Global Gender Gap Report published by the World Economic Forum. We download the data through Statista (cite statista). The raw dataset includes 146 countries and their gender gap index values. The value of the gender gap index shows the level of progress toward gender parity (the equal representation and treatment of genders). Values range from 0 to 1, and a parity score of 1 indicates full parity. The gender gap is the distance from full parity, meaning that countries with higher scores close to 1 have smaller gender gaps and countries with lower scores have wider gender gaps. For simplicity in analysis, we subtract the raw index score from 1 to indicate the gender gap. 
+The Gender Gap Index dataset comes from the 2023 Global Gender Gap Report published by the World Economic Forum. The raw dataset includes 146 countries and their gender gap index values. The value of the gender gap index shows the level of progress toward gender parity (the equal representation and treatment of genders). Values range from 0 to 1, and a parity score of 1 indicates full parity. The gender gap is the distance from full parity, meaning that countries with higher scores close to 1 have smaller gender gaps and countries with lower scores have wider gender gaps. For simplicity in analysis, we subtract the raw index score from 1 to indicate the gender gap. 
 
 
 ## Attitudes Towards Women
@@ -56,7 +67,7 @@ Data on attitudes on women is collected through the OECD Gender, Institutions, a
 GDP data comes from the World Bank. The dataset includes GDP per capita values measured in current US dollars. Data is available for all countries and also includes GDP per capita of regions like East Asia & Pacific, Euro area, Latin America & Caribbean, Middle East & North Africa, North America, and the world. Since we are interested in country-level data, we keep the data for individual countries and take out values for the larger regions. 
 
 ## Analysis Data
-As the goal of this research is to analyze the impact of attitudes on the gender gap, we combine all the described data above to form an analysis dataset for the purpose of analyzing the impact of attitudes towards women on the gender gap. Below is a sample of the cleaned analysis data and summary statistics for all explanatory variables and the outcome variable of gender gap. 
+As the goal of this research is to analyze the impact of attitudes on the gender gap, we combine all the described data above to form an analysis dataset for the purpose of analyzing the impact of attitudes towards women on the gender gap. Below is a sample of the cleaned analysis data in @tbl-cleaned_data.   @tbl-summ-stats shows summary statistics for all explanatory variables and the outcome variable of gender gap. 
 
 ```{r}
 #| label: tbl-cleaned_data
@@ -130,78 +141,74 @@ As our variable of interests, we are determined to examine the relationship betw
 
 ```{r}
 #| echo: false
-#| label: income_plot
+#| label: fig-income-plot
 #| fig-cap: "Positive relationship in negative attitude towards high income in women and the gender gap by country"
 #| warning: false 
 
-  ggplot(data = data, aes(x = `Income Attitude`, y = `Gender Gap`, label = `Code`)) +
+  ggplot(data = data, aes(x = `Income Attitude`, y = `Gender Gap`)) +
   geom_point() +
-  geom_text_repel(hjust=-0.5, vjust=0.5) +
   geom_smooth(method = "lm", color = "red", se = TRUE) +
   theme_minimal() +
   labs(x = "Attitudes on Women's Income", y = "Gender Gap") +
   scale_colour_viridis_d()
 
 ```
-As expected, we observe a positive relationship between the attitudes on women's income variable and the gender gap variable. This means that there is a positive relationship between holding negative attitudes towards women with high income and the gender gap. Countries with high percentages of people agreeing that "if a woman earns more money than her husband, it's almost certain to cause problems" are associated with higher gender gaps. 
+As expected, in @fig-income-plot, we observe a positive relationship between the attitudes on women's income variable and the gender gap variable. This means that there is a positive relationship between holding negative attitudes towards women with high income and the gender gap. Countries with high percentages of people agreeing that "if a woman earns more money than her husband, it's almost certain to cause problems" are associated with higher gender gaps. 
 
 Next, we examine the relationship between attitudes on women's ability to be a political leader and the gender gap. The value of the variable is the percentage of the population aged 18 years and above agreeing or strongly agreeing that "men make better political leaders than women do." We expect there to be a positive relationship between negative attitudes on women in political leadership and the gender gap. 
 
 ```{r}
 #| echo: false
-#| label: political_plot
+#| label: fig-political-plot
 #| fig-cap: "Positive relationship in negative attitude towards women in political leadership and the gender gap by country"
 #| warning: false 
 
-  ggplot(data = data, aes(x = `Political Attitude`, y = `Gender Gap`, label = `Code`)) +
+  ggplot(data = data, aes(x = `Political Attitude`, y = `Gender Gap`)) +
   geom_point() +
-  geom_text_repel(hjust=-0.5, vjust=0.5) +
   geom_smooth(method = "lm", color = "red", se = TRUE) +
   theme_minimal() +
   labs(x = "Attitudes on Women's Ability to be a Political Leader", y = "Gender Gap") +
   scale_colour_viridis_d()
 
 ```
-Through the plot, we see that there is a positive relationship between attitudes on women's ability to be a political leader and the gender gap across the countries. This means that higher percentages of people believing that women are less capable than men of being political leaders are associated with wider gender gaps. 
+Through @fig-political-plot, we see that there is a positive relationship between attitudes on women's ability to be a political leader and the gender gap across the countries. This means that higher percentages of people believing that women are less capable than men of being political leaders are associated with wider gender gaps. 
 
 Finally, we look at the relationship between attitudes justifying intimate-partner violence and the gender gap. To reiterate, the variable of attitudes justifying intimate-partner violence is defined as the percentage of women aged 15 to 49 years who consider a husband to be justified in hitting or beating his wife. Therefore, we expect a positive relationship between attitudes justifying intimate-partner violence and the gender gap. 
 
 ```{r}
 #| echo: false
-#| label: violence_plot
+#| label: fig-violence-plot
 #| fig-cap: "Positive relationship in attitudes justifying intimate partner violence towards women and the gender gap by country"
 #| warning: false 
 
-  ggplot(data = data, aes(x = `Violence Attitude`, y = `Gender Gap`, label = `Code`)) +
+  ggplot(data = data, aes(x = `Violence Attitude`, y = `Gender Gap`)) +
   geom_point() +
-  geom_text_repel(hjust=-0.5, vjust=0.5) +
   geom_smooth(method = "lm", color = "red", se = TRUE) +
   theme_minimal() +
   labs(x = "Attitudes Justifying Intimate-Partner Violence", y = "Gender Gap") +
   scale_colour_viridis_d()
 
 ```
-The relationship observed in the data indicates that countries where a higher percentage of women accept intimate-partner violence as justified tend to exhibit wider disparities between genders. This suggests that societal attitudes that condone violence against women are associated with greater gender inequality.
+In @fig-violence-plot, the relationship observed in the data indicates that countries where a higher percentage of women accept intimate-partner violence as justified tend to exhibit wider disparities between genders. This suggests that societal attitudes that condone violence against women are associated with greater gender inequality.
 
 ## Examining GDP per capita towards the Gender Gap
 Here, we examine the relationship between GDP per capita and the gender gap. Despite previous research that did not show any link between GDP and gender gaps, we propose a negative relationship between GDP per capita and the gender gap. Since higher GDP means a greater amount or greater value of goods and services has been created, higher GDP might equate to greater human progress (cite investopedia). Intuitively, we expect that greater human progress would be associated with smaller gender gaps.
 
 ```{r}
 #| echo: false
-#| label: gdp_plot
+#| label: fig-gdp-plot
 #| fig-cap: "Positive relationship in attitudes justifying intimate partner violence towards women and the gender gap by country"
 #| warning: false 
 
-  ggplot(data = data, aes(x = GDP, y = `Gender Gap`, label = `Code`)) +
+  ggplot(data = data, aes(x = GDP, y = `Gender Gap`)) +
   geom_point() +
-  geom_text_repel(hjust=-0.5, vjust=0.5) +
   geom_smooth(method = "lm", color = "red", se = TRUE) +
   theme_minimal() +
   labs(x = "GDP per capita", y = "Gender Gap") +
   scale_colour_viridis_d()
 
 ```
-Through the plot, we observe a negative relationship between GDP per capita and the gender gap across the countries in our data. This means that higher GDP per capita is associated with narrower gender gaps. 
+Through @fig-gdp-plot, we observe a negative relationship between GDP per capita and the gender gap across the countries in our data. This means that higher GDP per capita is associated with narrower gender gaps. 
 
 # Model {#sec-model}
 
@@ -225,16 +232,22 @@ y_i|\mu_i, \sigma &\sim \mbox{Normal}(\mu_i, \sigma) \\
 \sigma &\sim \mbox{Exponential}(0.16)
 \end{align}
 
-We run the model in R [@citeR] using the `rstanarm` package of @rstan. Initially, we use the default priors from `rstanarm`, however, we allow `rstanarm` to improve the priors by scaling them based on the data. We allow auto-scaling and run both models with the updated priors specified above. 
+We run the model in R [@citeR] using the `rstanarm` package of @rstan. Initially, we use the default priors from `rstanarm`, however, we allow `rstanarm` to improve the priors by scaling them based on the data. We allow auto-scaling and run the model with the updated priors specified above. 
 
 
 
 ### Model justification
 
-We expect a positive relationship between the size of the wings and time spent aloft. In particular...
+We expected a positive relationship between all three attitude variables and the gender gap plus a negative relationship between GDP and the gender gap. Thus, our model is a multiple linear regression model with all explanatory variables and the outcome variable. We wanted to look at the effect of each attitude on the gender gap while controlling for the other attitude variables and GDP. This prompted us to develop a multiple regression model since we also observed moderate linear relationships in our data visualizations. 
 
-We can use maths by including latex between dollar signs, for instance $\theta$.
+From Appendix @fig-ppcheckandposteriorvsprior-1, we see through a posterior predictive check that the multiple regression model is an appropriate model and a good fit for the observed data. However, there are threats to the validity of linear regression estimates. Aspects of concern include linearity of explanatory variables, homoscedastity of errors, independence of errors, outliers and other high-impact
+observations. 
 
+Linearity of explanatory variables is concerned with whether the predictors enter in a linear way. Through the graphs of explanatory variables with the outcome variable in the Data section, we can be convinced that there is enough linearity in the explanatory variables for our purposes. 
+
+For homoscedasticity of errors, we are concerned that the errors are not becoming systematically larger or smaller throughout the example. For independence of errors, we are concerned that the errors are not correlated with each other. With the checks we have implemented in the appendix, we can see that the model appropriately fits our data and our model has been well constructed.
+
+Lastly, we might be worried that our results are being driven by a handful of observations. In the case of this research, we do not need to worry about this since our data only focuses on 68 countries, a smaller dataset where no outliers are present. 
 
 # Results {#sec-results}
 
@@ -261,29 +274,47 @@ first_model <-
 
 modelsummary::modelsummary(
   list(
-    "First model" = first_model
+    "Multiple Linear Regression Model" = first_model
   ),
   statistic = "mad",
   fmt = 2
 )
 ```
 
+To run the model, we make an adjustment to the analysis data and multiply the gender gap variable by 100 so that all attitude variables and the gender gap variable values are percentages written in the same form. The multiple regression model has a positive intercept of 20.04, meaning that the model estimates that countries with no prevalence of negative attitudes toward women and a GDP per capita of zero, the gender gap will be 20 percent away from full parity. However, this is not a practical application since no country has a GDP per capita of zero. The coefficient of 0.02 for the income attitude variable indicates that for an increase of one percentage point in people that agree that "if a woman earns more money than her husband, it's almost certain to cause problems" the gender gap will increase by 0.02 percentage points after controlling for other attitudes and GDP. The coefficient of 0.18 for the violence attitude variable indicates that for an increase of one percentage point in women who consider a husband to be justified in hitting or beating his wife, the gender gap will increase by 0.18 percentage points after controlling for other variables. The coefficient of 0.01 for the political leadership variables means that for a one percentage point increase in the number of people who agree that "men make better political leaders than women do", there is a 0.01 percentage point increase in the gender gap. 
+
+In the model, the positive coefficients confirm a positive relationship between the attitude variables and the gender gap. However, based on the coefficients, the magnitude of these relationships is small, especially considering that the standard deviation of the gender gap is 6 percentage points. In terms of practical significance, the coefficient for income attitude and violence attitude do not have much meaning. An increase of one standard deviation in the income attitude variable only increases the gender gap by 0.32 percentage points. An increase of one standard deviation in the violence attitude variable increases the gender gap by 0.18 percentage points. On the other hand, the coefficient for political leadership variable has some practical significance. An increase of one standard deviation in the political leadership variable increases the gender gap by 3.85 percentage points. That is 64% of one standard deviation in the gender gap. 
+
+Furthermore, we observe a negative coefficient in the relationship between GDP and the gender gap. The coefficient for the GDP variable means that the gender gap is expected to decrease 0.02 percentage points for an increase of $1000 in the GDP per capita.   
+
+Despite the valence of the coefficients described above, the small coefficients close to zero of income attitude, violence attitude, and GDP more closely support little to no effect between these variables and the gender gap. Based on the model coefficients, we can confirm a positive relationship between attitudes on women's political leadership and the gender gap. 
 
 
 
 # Discussion {#sec-discussion}
 
-## First discussion point {#sec-first-point}
+## Key Findings {#sec-first-point}
 
-If my paper were 10 pages, then should be be at least 2.5 pages. The discussion is a chance to show off what you know and what you learnt from all this. 
+From the data visualization plots in the Data section, we see a positive relationship between all three attitude variables and the gender gap and a negative relationship between GDP per capita and the gender gap. We further investigate this relationship by building a model. We develop a multiple linear regression model, and the model results show a positive relationship between attitudes on women's ability to be a political leader and the gender gap. For attitudes on women's income, attitudes on intimate-partner violence, and GDP per capita, we observe little to no effect on the gender gap due to their coefficients close to zero. 
 
-## Second discussion point
+To elaborate, stronger societal attitudes that undermine women's abilities to serve in political leadership contribute to greater gender gaps between men and women. The Global Gender Gap Report discusses the state of gender gaps by the four subindices. Across the 146 countries covered by the 2023 report, the Health and Survival gender gap has closed by 96%, Educational Attainment by 95.2%, Economic Participation and Opportunity by 60.1%, and Political Empowerment by 22.1%. Of the four subindices, the Political Empowerment subindex has the lowest percentage of the gender gap closed to date in 2023. Our findings that attitudes on women's ability to be political leaders play a role in the gender inequality of a country can be attributed to the fact that the gender gap related to women's representation and role in politics remains the widest.
 
-## Third discussion point
 
-## Weaknesses and next steps
+## Validity
+To add on, we discuss the internal validity and external validity. Internal validity is concerned with the degree to which a study can establish a causal relationship between its variables without external influence. As mentioned previously, our small data problem can affect the internal validity of the research in question. Since we have a small data set, there is a reduction in statistical power, the probability of correctly rejecting a false null hypothesis. Additionally, having a small number of observations increases the risk of overfitting. In this case, the model learns the noise in the data instead of the underlying pattern. External validity extends the concern to how well the study's findings can be generalized beyond the specific conditions, populations, and settings examined. The data we use is at the country level, but since our sample is not randomly sampled but rather conveniently sampled, we can not generalize these findings to all countries in the world and can only use the findings to explain the trend among the countries analyzed. 
 
-Weaknesses and next steps should also be included.
+## Weaknesses and Limitations
+Several weaknesses and limitations lie in the research. The research is confined to analyzing data from the year 2023. This restriction stems from the unavailability of a longitudinal dataset in the OECD Gender, Institutions, and Development Database. The lack of multi-year data inhibits the ability to perform time-series analysis, which would allow for the examination of trends, patterns, and changes over time. Time-series analysis could potentially provide insights into how shifts in societal attitudes towards gender roles correlate with economic and policy changes. Therefore, this limitation could result in a less comprehensive understanding of the dynamics and evolution of gender attitudes.
+
+The scope of the data is further restricted to 68 countries due to the limited availability of attitude data in the OECD database. While we have the World Bank and Global Gender Gap Report provide GDP and gender gap data for over 100 countries, the data on societal attitudes towards gender is not as expansive. This discrepancy significantly narrows the geographical scope of the analysis and may introduce a selection bias. The countries for which attitude data is available may not be representative of global norms and variations, potentially skewing the results and limiting the generalizability of the findings. This selection bias could affect the reliability of extrapolating the study's conclusions to a global context or to countries not included in the analysis.
+
+These data constraints restrict the depth and breadth of the research. Analyzing only a single year's data provides just a snapshot view, rather than a narrative of change or progression, which is critical in understanding gender dynamics thoroughly. Additionally, with a limited number of countries analyzed, the study may miss out on diverse cultural perspectives that could challenge the core themes. The lack of comprehensive coverage limits the ability to conduct comparative analyses between regions that might exhibit significantly different gender norms.  
+
+
+## Next steps
+To address these limitations, future research could explore additional databases and seek alternative sources that might offer a more longitudinal perspective or a wider array of countries with attitude data. More time and resources could allow for a more expansive dataset and 
+a richer analysis. Expanding the dataset would allow us to conduct a broader comparative analysis across different cultural, economic, and political contexts, which is essential for understanding the global diversity in attitudes toward gender issues. Additionally, integrating longitudinal data could provide valuable insights into the temporal dynamics of gender attitudes, highlighting trends and shifts over time that may be influenced by global movements, policy changes, or economic factors. Lastly, gender gap research could be continued with different explanatory variables as well. As mentioned earlier, gender inequality is driven by many factors. Analysis in one dimension is not enough to understand the complexity of the gender gaps that exist in societies today. We can continue to explore the different areas that have caused a gap between the experiences for men and women and work towards finding and implementing beneficial policies that will narrow the gender gap.  
+
 
 \newpage
 
@@ -296,12 +327,25 @@ Weaknesses and next steps should also be included.
 
 # Model details {#sec-model-details}
 
+
+```{r}
+#| echo: false
+#| eval: true
+#| label: fig-modelresultsfig
+#| fig-cap: "Explanatory models of public art works based on population"
+#| warning: false
+
+modelplot(first_model, conf_level = 0.9) +
+  labs(x = "90 per cent credibility interval")
+
+```
+
 ## Posterior predictive check
 
-In @fig-ppcheckandposteriorvsprior-1 we implement a posterior predictive check on the multiple regression model. This shows the comparison between the actual outcome variable (public art installations) with simulations from the posterior distribution.
+In @fig-ppcheckandposteriorvsprior-1 we implement a posterior predictive check on the multiple regression model. This shows the comparison between the actual outcome variable (gender gap) with simulations from the posterior distribution. From the figure, we can see that the observed data and posterior predictions mostly overlap, indicating that the model is an appropriate fit and replicates the observed distribution well. 
 
-In @fig-ppcheckandposteriorvsprior-2 we compare the posterior with the prior. This shows... 
-
+In @fig-ppcheckandposteriorvsprior-2 we compare the posterior with the prior. This shows how much the  
+estimates of the coefficients of our variables attitudes on women's income, attitudes on women's ability to be a political leader, attitudes justifying intimate-partner violence, and GDP have changed once data was taken into account.
 ```{r}
 #| eval: true
 #| echo: false
@@ -311,6 +355,9 @@ In @fig-ppcheckandposteriorvsprior-2 we compare the posterior with the prior. Th
 #| layout-ncol: 2
 #| fig-cap: "Examining how the model fits, and is affected by, the data"
 #| fig-subcap: ["Posterior prediction check", "Comparing the posterior with the prior"]
+
+analysis_data_path <- here("data", "analysis_data", "analysis_data.parquet")
+analysis_data <- read_parquet(analysis_data_path)
 
 pp_check(first_model) +
   theme_classic() +
@@ -325,16 +372,14 @@ posterior_vs_prior(first_model) +
 
 ## Diagnostics
 
-@fig-stanareyouokay-1 is a trace plot. It shows... This suggests...
-
-@fig-stanareyouokay-2 is a Rhat plot. It shows... This suggests...
+The Markov chain Monte Carlo sampling algorithm checks for signs that the algorithm has issues. We consider a trace plot @fig-plots-1, and a Rhat plot @fig-plots-2. In @fig-plots-1, we see horizontal lines that bounce around and have overlap between the chains. In @fig-plots-2, we see that everything is close to 1. We do not see anything out of the ordinary in the trace plot or Rhat plot, indicating that the algorithm did not run into any issues. 
 
 ```{r}
 #| echo: false
 #| eval: true
 #| message: false
 #| warning: false
-#| label: fig-stanareyouokay
+#| label: fig-plots
 #| fig-cap: "Checking the convergence of the MCMC algorithm"
 #| fig-subcap: ["Trace plot", "Rhat plot"]
 #| layout-ncol: 2
@@ -343,6 +388,9 @@ plot(first_model, "trace")
 
 plot(first_model, "rhat")
 ```
+
+
+
 
 
 
