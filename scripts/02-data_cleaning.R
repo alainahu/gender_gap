@@ -1,11 +1,11 @@
 #### Preamble ####
-# Purpose: Cleans the raw plane data recorded by two observers..... [...UPDATE THIS...]
-# Author: Rohan Alexander [...UPDATE THIS...]
-# Date: 6 April 2023 [...UPDATE THIS...]
-# Contact: rohan.alexander@utoronto.ca [...UPDATE THIS...]
+# Purpose: Cleans the raw data from various sources and merges them together to form the analysis dataset. 
+# Author: Alaina Hu
+# Date: 18 April 2024
+# Contact: alaina.hu@utoronto.ca 
 # License: MIT
-# Pre-requisites: [...UPDATE THIS...]
-# Any other information needed? [...UPDATE THIS...]
+# Pre-requisites: Have access to the raw datasets from the Global Gender Gap Report, OECD Database, and World Bank Data Portal.
+# Any other information needed? Data cleaning here uses the files in data/raw_data. To ensure replicability, the raw data have all been uploaded to the folder. 
 
 #### Workspace setup ####
 library(tidyverse)
@@ -17,8 +17,6 @@ attitude_data <- read_csv("data/raw_data/raw_data.csv")
 gendergap_data <- read_excel("data/raw_data/global-gender-gap-index-2023.xlsx")
 
 gdp_data <- read_csv("data/raw_data/gdp_data.csv")
-
-
 
 
 

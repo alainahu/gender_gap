@@ -1,12 +1,11 @@
 #### Preamble ####
-# Purpose: Downloads and saves the data from [...UPDATE THIS...]
-# Author: Rohan Alexander [...UPDATE THIS...]
-# Date: 11 February 2023 [...UPDATE THIS...]
-# Contact: rohan.alexander@utoronto.ca [...UPDATE THIS...]
+# Purpose: Downloads and saves the data from various sources to merge and create the analysis dataset
+# Author: Alaina Hu
+# Date: 18 April 2024
+# Contact: alaina.hu@utoronto.ca 
 # License: MIT
-# Pre-requisites: [...UPDATE THIS...]
-# Any other information needed? [...UPDATE THIS...]
-
+# Pre-requisites: Have access to the 2023 Global Gender Gap Report, OECD Database, and World Bank Data
+# Any other information needed? Raw datasets downloaded from the sources are available in data/raw_data. Merged and cleaned data for analysis is in data/analysis_data
 
 #### Workspace setup ####
 library(tidyverse)
